@@ -1,84 +1,87 @@
-# SNS Topic
+# Container Definition
 
-Creates an SNS Topic. Supports all standard options for the SNS Topic resource.
+A module to help define ECS container definitions using a more canonically Terraform method to define them.
+ECS task definitions require the raw JSON of container definitions as inputs to the AWS provider's `aws_ecs_task_definition` resource,
+which has historically limited the reuse-ability of common containers like logging, apm, or configuration rendering.
+This module hopes to solve that by creating a Terraform-esque representation of a container definition which can then be
+composed with other container definitions as part of a task definition.
 
-Note that this module includes submodules for other common SNS needs, including:
+## Input Variables
 
-[sns_sms_preferences](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_sms_preferences)
+| Name | Description | Required | Default |
+|------|-------------|----------|---------|
+| name | The name of the container | **Y** | |
+| image | The image used for the container | **Y** | |
+| container | The map of container definition properties to override defaults | N | empty map |
+| command | The command that is passed to the container | N | null |
+| entrypoint | The entry point that is passed to the container | N | null |
+| environment | The key/value map of environment variables to pass to a container. | N | empty map |
+| depends | A map of dependencies for this container. Key is the name of the container we depend on, value is that state of that container to satisfy the dependency | N | empty map |
+| dns_servers | A list of DNS servers that are presented to the container | N | null |
+| dns_search_domains | A list of DNS search domains that are presented to the container | N | null |
+| extra_hosts | A map of host name keys and their corresponding IP address as the value to append to the /etc/hosts file on the container | N | empty map |
+| health_check | The container health check command and associated configuration for the container | N | null |
+| labels | A key/value map of labels to add to the container | N | null |
+| links | A list of legacy Docker link between containers | N | null |
+| mount_points | A map of mount points to configure in the container. Key is the path on the container to mount the volume at, value is in the form 'volume_name:read_only' | N | empty map |
+| port_mappings | A list of port mappings in the form of 'containerPort' or 'containerPort/protocol' or 'containerPort/protocol/hostPort'. Protocol is an optional value and defaults to 'tcp'. The hostPort is also optionsl. | N | empty list |
+| resource_requirements | The type and amount of a resource to assign to a container. Key is the resource type | N | empty map |
+| secrets | A map of secret resources. Key is the name of the secret used by the container, value is the ARN of the secret in Secrets Manager or Parameter Store | N | empty map |
+| security_options | A list of strings to provide custom labels for SELinux and AppArmor multi-level security systems | N | null |
+| sysctls | A map of kernel sysctls to set on the container. Keys are the sysctl name | N | empty map |
+| ulimits | A map of ulimits to set in the container. Key is the ulimit name, value is in the form 'soft_limit:hard_limit' | N | empty map |
+| volumes_from | Data volumes to mount from another container. Keys are the contain name, value is a boolean to set the read-only status of the volume | N | empty map |
+| firelens_config | The FireLens configuration for the container | N | null |
+| log_config | The log configuration specification for the container | N | null |
 
-[sns_subscription](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription#protocol-support)
+### container Variable Defaults
 
-[sns_topic_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/)
+These are the default container properties, use the `container` input variable map to override
 
-[sns_platform_application](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_platform_application)
+| Name | Description | Value |
+|------|-------------|-------|
+| cpu_shares | The number of cpu shares reserved for the container | 0 |
+| essential | If true, failure of this container stops all other containers that are part of the task | false |
+| hostname | The hostname to use for your container | null |
+| interactive | If true, allocate stdin or a tty to the container | false |
+| mem_soft_limit | The soft memory limit (memoryReservation), in MiB. At least one of the mem_soft_limit or mem_hard_limit map keys must be defined for non-Fargate containers | 0 |
+| mem_hard_limit | The hard memory limit, in MiB. At least one of the mem_soft_limit or mem_hard_limit map keys must be defined for non-Fargate containers | 0 |
+| networking | If false, networking is disabled within the container | true |
+| private_repo_credentials | The Amazon Resource Name (ARN) of the secret containing the private repository credentials | null |
+| privileged | If true, the container is given elevated privileges on the host container instance | false |
+| read_only_rootfs | If true, the container is given read-only access to its root file system | false |
+| start_timeout | The start timeout settings (in seconds) for the container | 0 |
+| stop_timeout | The stop timeout settings (in seconds) for the container | 0 |
+| terminal | If true, a TTY is allocated | false |
+| user | The user name to use inside the container | null |
+| workdir | The working directory in which to run commands inside the container | null |
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-Auto-generated technical documentation is created using [`terraform-docs`](https://terraform-docs.io/)
-## Examples
-
-```hcl
-# See examples under the top level examples directory for more information on how to use this module.
-```
-
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.38 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.35.0 |
-
-## Modules
-
-No modules.
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [aws_sns_topic.topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_application_failure_feedback_role_arn"></a> [application\_failure\_feedback\_role\_arn](#input\_application\_failure\_feedback\_role\_arn) | ARN of the IAM role for failure feedback. | `string` | `null` | no |
-| <a name="input_application_success_feedback_role_arn"></a> [application\_success\_feedback\_role\_arn](#input\_application\_success\_feedback\_role\_arn) | ARN of the IAM role permitted to receive success feedback for this topic. | `string` | `null` | no |
-| <a name="input_application_success_feedback_sample_rate"></a> [application\_success\_feedback\_sample\_rate](#input\_application\_success\_feedback\_sample\_rate) | Percentage of success to sample. | `number` | `null` | no |
-| <a name="input_content_based_deduplication"></a> [content\_based\_deduplication](#input\_content\_based\_deduplication) | Enables content-based deduplication for FIFO topics. For more information, see the [related documentation](https://docs.aws.amazon.com/sns/latest/dg/fifo-message-dedup.html) | `bool` | `false` | no |
-| <a name="input_delivery_policy"></a> [delivery\_policy](#input\_delivery\_policy) | The SNS delivery policy. More information can be found in the [AWS documentation](https://docs.aws.amazon.com/sns/latest/dg/sns-message-delivery-retries.html). Examples of using this variable can be found [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic). | `string` | `null` | no |
-| <a name="input_display_name"></a> [display\_name](#input\_display\_name) | The display name for the topic. If not specified, the display name will be the same as the topic name. | `string` | `null` | no |
-| <a name="input_fifo_topic"></a> [fifo\_topic](#input\_fifo\_topic) | Boolean indicating whether or not to create a FIFO (first-in-first-out) topic (default is **false**). Note that if enabling a FIFO topic, this module will automatically append the topic name with **.fifo**, per the naming requirements for FIFO topics. | `bool` | `false` | no |
-| <a name="input_firehose_failure_feedback_role_arn"></a> [firehose\_failure\_feedback\_role\_arn](#input\_firehose\_failure\_feedback\_role\_arn) | ARN of the IAM role for failure feedback. | `string` | `null` | no |
-| <a name="input_firehose_success_feedback_role_arn"></a> [firehose\_success\_feedback\_role\_arn](#input\_firehose\_success\_feedback\_role\_arn) | ARN of the IAM role permitted to receive success feedback for this topic. | `string` | `null` | no |
-| <a name="input_firehose_success_feedback_sample_rate"></a> [firehose\_success\_feedback\_sample\_rate](#input\_firehose\_success\_feedback\_sample\_rate) | Percentage of success to sample. | `number` | `null` | no |
-| <a name="input_http_failure_feedback_role_arn"></a> [http\_failure\_feedback\_role\_arn](#input\_http\_failure\_feedback\_role\_arn) | ARN of the IAM role for failure feedback. | `string` | `null` | no |
-| <a name="input_http_success_feedback_role_arn"></a> [http\_success\_feedback\_role\_arn](#input\_http\_success\_feedback\_role\_arn) | ARN of the IAM role permitted to receive success feedback for this topic. | `string` | `null` | no |
-| <a name="input_http_success_feedback_sample_rate"></a> [http\_success\_feedback\_sample\_rate](#input\_http\_success\_feedback\_sample\_rate) | Percentage of success to sample. | `number` | `null` | no |
-| <a name="input_kms_master_key_id"></a> [kms\_master\_key\_id](#input\_kms\_master\_key\_id) | The ID of an AWS-managed customer master key (CMK) for Amazon SNS or a custom CMK. For more information, see [Key Terms](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html#sqs-sse-key-terms). | `string` | `null` | no |
-| <a name="input_lambda_failure_feedback_role_arn"></a> [lambda\_failure\_feedback\_role\_arn](#input\_lambda\_failure\_feedback\_role\_arn) | ARN of the IAM role for failure feedback. | `string` | `null` | no |
-| <a name="input_lambda_success_feedback_role_arn"></a> [lambda\_success\_feedback\_role\_arn](#input\_lambda\_success\_feedback\_role\_arn) | ARN of the IAM role permitted to receive success feedback for this topic. | `string` | `null` | no |
-| <a name="input_lambda_success_feedback_sample_rate"></a> [lambda\_success\_feedback\_sample\_rate](#input\_lambda\_success\_feedback\_sample\_rate) | Percentage of success to sample. | `number` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | Short, descriptive name of the environment. All resources will be named using this value as a prefix. See [aws\_sns\_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic#name) for more information on name restrictions / requirements. | `string` | n/a | yes |
-| <a name="input_policy"></a> [policy](#input\_policy) | The JSON policy for the SNS topic. For more information about building AWS IAM policy documents with Terraform, see the [AWS IAM Policy Document Guide](https://learn.hashicorp.com/tutorials/terraform/aws-iam-policy?_ga=2.82257951.884055799.1634563672-272413849.1610471322). | `string` | `null` | no |
-| <a name="input_sqs_failure_feedback_role_arn"></a> [sqs\_failure\_feedback\_role\_arn](#input\_sqs\_failure\_feedback\_role\_arn) | ARN of the IAM role for failure feedback. | `string` | `null` | no |
-| <a name="input_sqs_success_feedback_role_arn"></a> [sqs\_success\_feedback\_role\_arn](#input\_sqs\_success\_feedback\_role\_arn) | ARN of the IAM role permitted to receive success feedback for this topic. | `string` | `null` | no |
-| <a name="input_sqs_success_feedback_sample_rate"></a> [sqs\_success\_feedback\_sample\_rate](#input\_sqs\_success\_feedback\_sample\_rate) | Percentage of success to sample. | `number` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | A map of tag names and values for tags to apply to all taggable resources created by the module. Default value is a blank map to allow for using Default Tags in the provider. | `map(string)` | `{}` | no |
-| <a name="input_topic_name_override"></a> [topic\_name\_override](#input\_topic\_name\_override) | Used if there is a need to specify a topic name outside of the standardized nomenclature. For example, if importing a topic that doesn't follow the standard naming formats. See [aws\_sns\_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic#name) for more information on name restrictions / requirements. | `string` | `null` | no |
-| <a name="input_topic_prefix"></a> [topic\_prefix](#input\_topic\_prefix) | SNS Topic name prefix, will be appended to `var.name` if a value is supplied. See [aws\_sns\_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic#name) for more information on name restrictions / requirements. | `string` | `null` | no |
-
-## Outputs
+## Output Variables
 
 | Name | Description |
 |------|-------------|
-| <a name="output_topic"></a> [topic](#output\_topic) | A map of properties for the created SNS topic. |
+| value | The Terraform object representing the container definition. |
+| json | The JSON encoded representation of the object for the container definition. |
 
+## Quick Start
 
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+```hcl-terraform
+module "container" {
+  source = "../../modules/container-definition"
+  name   = "nginx"
+  image  = "nginx:1.18-alpine"
+
+  container = {
+    essential      = true
+    mem_hard_limit = 64
+  }
+
+  port_mappings = [8080]
+
+  environment = {
+    NGINX_PORT = 8080
+  }
+}
+```
+
+More configuration examples can be found in the [examples](../../examples) directory

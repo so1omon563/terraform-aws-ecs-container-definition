@@ -1,6 +1,5 @@
 module "container" {
-  source  = "so1omon563/ecs-container-definition/aws"
-  version = "1.0.0" # Replace with appropriate version
+  source = "../../"
 
   name  = "nginx"
   image = "nginx:1.18-alpine"
@@ -10,7 +9,7 @@ module "container" {
 
   port_mappings = [8080]
 
-  environment = {
+  environment_variables = {
     NGINX_PORT = 8080
   }
 }

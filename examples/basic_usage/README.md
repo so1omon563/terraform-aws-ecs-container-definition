@@ -9,8 +9,7 @@ Basic quickstart for creating a container definition.
 
 ```hcl
 module "container" {
-  source  = "so1omon563/ecs-container-definition/aws"
-  version = "1.0.0" # Replace with appropriate version
+  source = "../../"
 
   name  = "nginx"
   image = "nginx:1.18-alpine"
@@ -20,7 +19,7 @@ module "container" {
 
   port_mappings = [8080]
 
-  environment = {
+  environment_variables = {
     NGINX_PORT = 8080
   }
 }
@@ -42,7 +41,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_container"></a> [container](#module\_container) | so1omon563/ecs-container-definition/aws | 1.0.0 |
+| <a name="module_container"></a> [container](#module\_container) | ../../ | n/a |
 
 ## Resources
 

@@ -66,7 +66,7 @@ variable "entrypoint" {
   default     = null
 }
 
-variable "environment" {
+variable "environment_variables" {
   type        = map(string)
   description = "The key/value map of environment variables to pass to a container. This parameter maps to `Env` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/) and the `--env` option to [docker run](https://docs.docker.com/engine/reference/run/)."
   default     = {}

@@ -26,9 +26,7 @@ Auto-generated technical documentation is created using [`terraform-docs`](https
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.37.0 |
+No providers.
 
 ## Modules
 
@@ -36,10 +34,7 @@ No modules.
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+No resources.
 
 ## Inputs
 
@@ -55,8 +50,8 @@ No modules.
 | <a name="input_docker_labels"></a> [docker\_labels](#input\_docker\_labels) | A key/value map of labels to add to the container. This parameter maps to `Labels` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/). | `map(string)` | `null` | no |
 | <a name="input_docker_security_options"></a> [docker\_security\_options](#input\_docker\_security\_options) | A list of strings to provide custom labels for SELinux and AppArmor multi-level security systems. This field isn't valid for containers in tasks using the Fargate launch type. This parameter maps to `SecurityOpt` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/). | `list(string)` | `null` | no |
 | <a name="input_entrypoint"></a> [entrypoint](#input\_entrypoint) | The entry point that is passed to the container | `list(string)` | `null` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | The key/value map of environment variables to pass to a container. This parameter maps to `Env` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/) and the `--env` option to [docker run](https://docs.docker.com/engine/reference/run/). | `map(string)` | `{}` | no |
 | <a name="input_environment_files"></a> [environment\_files](#input\_environment\_files) | A list of files containing the environment variables to pass to a container. This parameter maps to the `--env-file` option to [docker run](https://docs.docker.com/engine/reference/run/). | `list(string)` | `null` | no |
+| <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | The key/value map of environment variables to pass to a container. This parameter maps to `Env` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/) and the `--env` option to [docker run](https://docs.docker.com/engine/reference/run/). | `map(string)` | `{}` | no |
 | <a name="input_essential"></a> [essential](#input\_essential) | Determines whether the container is marked as essential. All tasks must have at least one essential container. If you have an application that is composed of multiple containers, you should mark the main container as essential and all other containers as non-essential. | `bool` | `true` | no |
 | <a name="input_extra_hosts"></a> [extra\_hosts](#input\_extra\_hosts) | A map of host name keys and their corresponding IP address as the value to append to the /etc/hosts file on the container | `map(string)` | `{}` | no |
 | <a name="input_firelens_config"></a> [firelens\_config](#input\_firelens\_config) | The FireLens configuration for the container.  This is used to specify and configure a log router for container logs. For more information, see [Custom Log Routing](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_firelens.html) in the Amazon Elastic Container Service Developer Guide. Note that if using this variable, values must be provided for all of the properties, even if that value is `null`. | <pre>object({<br>    type    = string<br>    options = map(string)<br>  })</pre> | `null` | no |

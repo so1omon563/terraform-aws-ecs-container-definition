@@ -2,15 +2,13 @@
 
 A module to help define ECS container definitions using a more common Terraform method.
 
-ECS task definitions require the raw JSON of container definitions as inputs to the AWS provider's `aws_ecs_task_definition` resource. This has historically limited the reusability of common containers like logging, etc.
+This module creates a Terraform-esque representation of a container definition which can then be composed with other container definitions as part of a task definition.
 
-This module hopes to solve that by creating a Terraform-esque representation of a container definition which can then be
-composed with other container definitions as part of a task definition.
-
-Note that only 1 container definition is supported per module instance. If you need to define multiple container definitions, you can use this module multiple times and string the `json` outputs together for your task definition.
+Note that only 1 container definition is supported per module instance. If you need to define multiple container definitions, you can use this module multiple times and string the `json` outputs together for your task definition. Examples of this can be found in the `examples` directory.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 Auto-generated technical documentation is created using [`terraform-docs`](https://terraform-docs.io/)
+
 ## Examples
 
 ```hcl
@@ -40,7 +38,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_command"></a> [command](#input\_command) | The command that's passed to the container. This parameter maps to `Cmd` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/) and the `COMMAND` parameter to [docker run](https://docs.docker.com/engine/reference/run/#security-configuration). For more information, see https://docs.docker.com/engine/reference/builder/#cmd. If there are multiple arguments, each argument is a separated string in the array. | `list(string)` | `null` | no |
+| <a name="input_command"></a> [command](#input\_command) | The command that's passed to the container. This parameter maps to `Cmd` in the [Create a container](https://docs.docker.com/engine/api/v1.35/#tag/Container/operation/ContainerCreate) section of the [Docker Remote API](https://docs.docker.com/engine/api/v1.35/) and the `COMMAND` parameter to [docker run](https://docs.docker.com/engine/reference/run/#security-configuration). For more information, see <https://docs.docker.com/engine/reference/builder/#cmd>. If there are multiple arguments, each argument is a separated string in the array. | `list(string)` | `null` | no |
 | <a name="input_container"></a> [container](#input\_container) | The map of container definition properties to override defaults | `map(string)` | `{}` | no |
 | <a name="input_cpu"></a> [cpu](#input\_cpu) | The number of cpu units reserved for the container. This is optional for tasks using the Fargate launch type, and the only requirement is that the total amount of cpu reserved for all containers within a task be lower than the task-level cpu value. | `number` | `0` | no |
 | <a name="input_depends"></a> [depends](#input\_depends) | A map of dependencies for this container. Key is the name of the container we depend on, value is that state of that container to satisfy the dependency | `map(string)` | `{}` | no |
@@ -87,6 +85,5 @@ No resources.
 |------|-------------|
 | <a name="output_json"></a> [json](#output\_json) | The JSON representation of the container definition. This can be used to pass to the `container_definitions` argument of the `aws_ecs_task_definition` resource. May require using `jsondecode` to facilitate this. |
 | <a name="output_terraform_value"></a> [terraform\_value](#output\_terraform\_value) | The Terraform object representing the container definition. |
-
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

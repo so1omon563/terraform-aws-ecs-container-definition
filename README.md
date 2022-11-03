@@ -85,7 +85,7 @@ No resources.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_json"></a> [json](#output\_json) | The JSON representation of the container definition. This can be used to pass to the `container_definitions` argument of the `aws_ecs_task_definition` resource. |
+| <a name="output_json"></a> [json](#output\_json) | The JSON representation of the container definition. This can be used to pass to the `container_definitions` argument of the `aws_ecs_task_definition` resource. May require using `jsondecode` to facilitate this. |
 | <a name="output_terraform_value"></a> [terraform\_value](#output\_terraform\_value) | The Terraform object representing the container definition. |
 
 
